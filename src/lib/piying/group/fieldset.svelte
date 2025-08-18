@@ -8,10 +8,10 @@
 </script>
 
 <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border p-4 w-full">
-  {#if props()['title']}
-    <legend class="fieldset-legend">{props()['title']}</legend>
+  {#if props()!['title']}
+    <legend class="fieldset-legend">{props()!['title']}</legend>
   {/if}
-  {#each children() as field, i (i)}
+  {#each children()! as field, i (i)}
     <PiyingFieldTemplate {field}></PiyingFieldTemplate>
   {/each}
 </fieldset>

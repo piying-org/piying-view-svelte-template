@@ -3,17 +3,15 @@
   import JSONFormatter from 'json-formatter-js';
   import { getContext } from 'svelte';
   import { summarize } from 'valibot';
-  // import { computed, inject, ref } from 'vue'
   const field = getContext<PI_VIEW_FIELD_TOKEN>(PI_VIEW_FIELD_TOKEN)!;
   const control = signalToState(() => field().form.root);
-  const value = signalToState(() => control().value$$());
-  const formatedHtml = $derived.by(() => new JSONFormatter(value()).render().outerHTML);
-  const errors$$ = signalToState(() => control().errors);
+  const value = signalToState(() => control()!.value$$());
+  const errors$$ = signalToState(() => control()!.errors);
   const errorStr$$ = $derived.by(() => {
     if (!errors$$()) {
       return '';
     }
-    const errors = errors$$();
+    const errors = errors$$()!;
 
     if (errors['valibot']) {
       return summarize(errors['valibot']);
@@ -23,7 +21,7 @@
         .join('\n');
     }
   });
-  const hasError = signalToState(() => !!control().errors);
+  const hasError = signalToState(() => !!control()!.errors);
   const isChangedStatus = signalToState(() => control()?.dirty$$() || control()?.touched$$());
   function submit() {
     field().form.root.emitSubmit();
@@ -33,27 +31,33 @@
   }
   let initData = $state<any>(undefined);
   function resetForm() {
-    control().reset(initData);
+    control()!.reset(initData);
   }
   function saveInit() {
     initData = value();
   }
   const forceShowError = signalToState(() => field().props()['forceShowError']);
+  let controlInvalid = signalToState(() => control()?.invalid);
+  let valueAnchor = $state<HTMLElement | undefined>();
+  $effect(() => {
+    if (valueAnchor) {
+      valueAnchor.innerHTML = '';
+      valueAnchor.appendChild(new JSONFormatter(value()).render());
+    }
+  });
 </script>
 
 <div>
-  <div>
-    {@html formatedHtml}
-  </div>
+  <div bind:this={valueAnchor}></div>
   {#if forceShowError() || (hasError() && isChangedStatus())}
     <div class="text-error">
       <div class="label">Form Error</div>
-      <pre class="mt-2 text-error">{{ errorStr$$ }}</pre>
+      <pre class="mt-2 text-error">{errorStr$$}</pre>
     </div>
   {/if}
 
   <div class="flex gap-2 items-center">
-    <button disabled={control().invalid} class="btn btn-primary" onclick={submit}>Submit</button>
+    <button disabled={controlInvalid()} class="btn btn-primary" onclick={submit}>Submit</button>
     <button class="btn btn-outline btn-secondary" onclick={resetForm}>Reset</button>
     <button class="btn btn-outline btn-accent" onclick={saveInit}>Update Intial Values</button>
   </div>
