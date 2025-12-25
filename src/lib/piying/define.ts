@@ -7,13 +7,13 @@ import LabelWrapper from './wrapper/label-wrapper.svelte';
 import ValidatorWrapper from './wrapper/validator-wrapper.svelte';
 import ArrayRw from './group/array-rw.svelte';
 import type { PiViewConfig } from '@piying/view-svelte';
-import { lazyMark } from '@piying/view-core';
+import { lazyMark, actions } from '@piying/view-core';
 export const fieldConfig = {
   types: {
-    string: { type: InputText, wrappers: ['label'] },
-    number: { type: InputNumber, wrappers: ['label'] },
+    string: { type: InputText, actions: [actions.wrappers.set(['label'])] },
+    number: { type: InputNumber, actions: [actions.wrappers.set(['label'])] },
     radio: { type: InputRadio },
-    boolean: { type: InputCheckbox, wrappers: ['label'] },
+    boolean: { type: InputCheckbox, actions: [actions.wrappers.set(['label'])] },
     fieldset: { type: FieldsetGroup },
     'array-rw': { type: ArrayRw },
     formHelper: { type: lazyMark(() => import('./form-helper.svelte').then((a) => a.default)) },
