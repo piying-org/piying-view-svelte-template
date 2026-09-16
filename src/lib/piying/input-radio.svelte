@@ -19,7 +19,11 @@
     },
   };
   export { cva };
-  let props: { options?: any[]; optionConvert?: OptionConvert } = $props();
+  let props: {
+    options?: any[];
+    optionConvert?: OptionConvert;
+    onIndexChange?: (index: number) => void;
+  } = $props();
   let resolvedOptions = $derived.by(() => {
     return transformOptions(props.options ?? [], { ...DefaultOptionConvert, ...props.optionConvert });
   });
@@ -36,6 +40,7 @@
       bind:group={obj.value}
       disabled={field.disabled || cvaa.disabled}
       onblur={cvaa.touchedChange}
+      onchange={() => props.onIndexChange?.(i)}
       value={field.value}
     />
     <div class="label">{field.label}</div>

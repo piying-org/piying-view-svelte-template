@@ -10,7 +10,7 @@
   type="checkbox"
   bind:checked={
     () => {
-      return cvaa.value as boolean;
+      return !!cvaa.value;
     },
     (v) => {
       return cvaa.valueChange(v);
