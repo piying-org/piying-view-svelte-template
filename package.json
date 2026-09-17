@@ -19,7 +19,7 @@
     "vite": "^7.1.2"
   },
   "dependencies": {
-    "@piying/view-svelte": "^2.16.6",
+    "@piying/view-svelte": "^2.16.7",
     "@tailwindcss/vite": "^4.1.12",
     "@valibot/i18n": "^1.0.0",
     "json-formatter-js": "^2.5.23",
